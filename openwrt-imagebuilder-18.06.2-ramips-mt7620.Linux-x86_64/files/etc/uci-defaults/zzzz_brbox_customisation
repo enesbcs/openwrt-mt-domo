@@ -1,0 +1,45 @@
+#!/bin/sh
+#uci -q get dhcp.odhcpd && exit 0
+DEFAULT_NAME="autom8box" #short name for automate-box
+DEF_LAN_IP="192.168.8.1"
+#MACADDR=$(cat /sys/class/net/eth0/address | sed 's/://g')
+MACADDR=goodlife
+echo -e "$MACADDR\n$MACADDR" | passwd root #MACID is the default root-pw and wifi-pw, ex: e4956e4ddae3 
+uci -q batch <<-EOT
+	set network.lan.ipaddr=$DEF_LAN_IP
+	set wireless.radio0.disabled=0
+	set wireless.default_radio0.ssid=$DEFAULT_NAME
+	set wireless.default_radio0.encryption='psk2+aes'
+	set wireless.default_radio0.key=$MACADDR
+	set system.@system[0].hostname=$DEFAULT_NAME
+
+	add firewall rule
+	set firewall.@rule[-1].src=wan
+	set firewall.@rule[-1].target=ACCEPT
+	set firewall.@rule[-1].proto=tcp
+	set firewall.@rule[-1].dest_port=22
+	
+
+	add firewall rule
+	set firewall.@rule[-1].src=wan
+	set firewall.@rule[-1].target=ACCEPT
+	set firewall.@rule[-1].proto=tcp
+	set firewall.@rule[-1].dest_port=8080
+	
+
+	add firewall rule
+	set firewall.@rule[-1].src=wan
+	set firewall.@rule[-1].target=ACCEPT
+	set firewall.@rule[-1].proto=tcp
+	set firewall.@rule[-1].dest_port=1883
+
+	set domoticz.@domoticz[0]=domoticz
+	set domoticz.@domoticz[0].disabled='1'
+	set domoticz.@domoticz[0].syslog='daemon'
+	set domoticz.@domoticz[0].sslwww='0'
+	set domoticz.@domoticz[0].userdata='/var/lib/domoticz/'
+	set domoticz.@domoticz[0].bkupdata='/etc/domoticz/userdata/'
+	set domoticz.@domoticz[0].loglevel='normal,error'
+	
+	commit 
+EOT

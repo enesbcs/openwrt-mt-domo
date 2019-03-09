@@ -1,0 +1,2 @@
+cd openwrt-imagebuilder-18.06.2-ramips-mt7620.Linux-x86_64/
+make image PROFILE=gl-mt300n FILES="files/" PACKAGES="libmosquitto-nossl -libmosquitto-ssl domoticz mosquitto mosquitto-client uhttpd uhttpd-mod-ubus libiwinfo-lua luci-base luci-app-firewall luci-mod-admin-full luci-theme-bootstrap kmod-usb-storage block-mount kmod-usb-ohci kmod-usb-uhci -ppp -ppp-mod-pppoe -ip6tables -odhcp6c -kmod-ipv6 -kmod-ip6tables -luci-proto-ipv6 -luci-proto-ppp -ppp-mod-pppoe dnsmasq -odhcpd-ipv6only -libopenzwave rtl_433 -libopenssl -libip6tc"
